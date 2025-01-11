@@ -1,0 +1,252 @@
+{% extends "gstbillingapp/print_base.html" %}
+
+{% block content %}
+<style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            margin: 1cm;
+        }
+    }
+    
+    .pawn-ticket {
+        width: 190mm;  /* A4 width */
+        min-height: 260mm;  /* Half of A4 height */
+        margin: 10px auto;
+        padding: 20px;
+        background-color: #fff;
+        font-family: Arial, sans-serif;
+        border: 2px solid #000;
+    }
+    
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+    }
+    
+    .deity-image {
+        width: 80px;
+        height: 80px;
+        /* border: 1px solid #000; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+    }
+    
+    .company-details {
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 20px;
+    }
+    
+    .company-name {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .company-subheading {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .company-address {
+        font-size: 14px;
+    }
+    
+    .form-details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 12px;
+    }
+    
+    .customer-details {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .customer-details label {
+        font-weight: bold;
+    }
+    
+    .items-table {
+        width: 100%;
+		height: 70mm;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    
+    .items-table th, .items-table td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+        font-size: 14px;
+    }
+    
+    .weight-details {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .weight-details label {
+        font-weight: bold;
+    }
+    
+    .amount-section {
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .amount-words {
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .validity-period {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+        font-size: 14px;
+    }
+    
+    .photo-box {
+        width: 100px;
+        height: 120px;
+        border: 1px solid #000;
+        margin-left: 20px;
+    }
+	.btn-print {
+        background: #2575fc;
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        margin: 30px;
+		right: 50px;
+
+    }
+
+    .btn-print:hover {
+        background:  #2575fc;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .btn-print:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+<div class="pawn-ticket">
+    <div class="header-container">
+        <div class="deity-image">
+            <img src="https://saibabaimages.com/wp-content/uploads/2023/02/saibaba-2.png" alt="" srcset="" width="80px">
+        </div>
+        <div class="company-details">
+            <div class="company-name">{{ user_profile.business_title }}</div>
+            <div class="company-subheading">PAWN BROKER</div>
+            <div class="company-address">
+                {{ user_profile.business_address }}<br>
+                {% if user_profile.business_phone %}Phone: {{ user_profile.business_phone }}{% endif %}
+            </div>
+        </div>
+        <div class="deity-image">
+            <img src="https://pngimg.com/uploads/ganesha/ganesha_PNG7.png" alt="" srcset="" width="100px">
+        </div>
+    </div>
+
+    <div class="form-details">
+        <div>P.B.L. No: {{ pbl_number|default:"" }}</div>
+        <div>Form F (See 7-B Rule 8)</div>
+        <div>Pawn Ticket No: {{ invoice.invoice_number }}</div>
+        <div>Date: {{ invoice.invoice_date }}</div>
+    </div>
+
+    <div class="customer-details">
+        <label>Name & Address of Pawner:</label>
+        <div>{{ invoice_data.customer_name }}<br>{{ invoice_data.customer_address }}</div>
+        <label>Phone:</label>
+        <div>{{ invoice_data.customer_phone }}</div>
+    </div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Detailed Description of Articles</th>
+                <th>Nos.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice_data.items %}
+            <tr>
+                <td>{{ item.invoice_product }}</td>
+                <td>{{ item.invoice_qty }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="photo" style="display: flex; flex-direction: row; justify-content: space-between;">
+		<div class="weight-details">
+			<label>Gross Weight:</label>
+			<div>{{ invoice_data.gross_weight|default:"0.000" }}</div>
+			<label>Deduction:</label>
+			<div>{{ invoice_data.deduction|default:"0.000" }}</div>
+			<label>Net Weight:</label>
+			<div>{{ invoice_data.net_weight|default:"0.000" }}</div>
+			<label>Valuation:</label>
+			<div>₹ {{ invoice_data.valuation|default:"0.00" }}</div>
+		</div>
+		<div class="photo-box">
+			<!-- Photo box as shown in the image -->
+		</div>
+	</div>
+    <div class="amount-section">
+        <div><strong>Loan Amount: ₹ {{ invoice_data.invoice_total_amt_with_gst|floatformat:2 }}</strong></div>
+        <div class="amount-words">{{ total_in_words }} only</div>
+    </div>
+
+    <div class="validity-period">
+        This Pawn Ticket VALID up to {{ invoice_data.validity_date|default:"12 months from issue date" }}
+    </div>
+
+    <div class="footer">
+        <div>
+            Time: {{ invoice.created_at|default:"" }}<br>
+            For {{ user_profile.business_title }}
+        </div>
+        
+        <div>Signature of Pawner</div>
+    </div>
+</div>
+
+<button onclick="window.print();" class="btn-print btn-primary d-print-none">Print Ticket</button>
+{% endblock %}
