@@ -8,6 +8,156 @@
             margin: 0;
         }
         body {
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .btn-print {
+            display: none;
+        }
+    }
+    
+    .pawn-ticket {
+        width: 230mm;  /* Exact A4 width */
+        min-height: 327mm;  /* Exact A4 height */
+        margin: 80px auto;
+        padding: 20px;
+        background-color: #fff;
+        font-family: Arial, sans-serif;
+        border: 2px solid #000;
+        border-radius: 15px;
+        box-sizing: border-box;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+    
+    /* Rest of your existing CSS styles remain the same */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+    }
+    
+    .deity-image {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .company-details {
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 15px;
+    }
+    
+    .company-name {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .company-subheading {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .company-address {
+        font-size: 14px;
+    }
+    
+    .form-details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 13px;
+    }
+    
+    .customer-details {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 8px;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    
+    .items-table {
+        width: 100%;
+        height: 100mm;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+    
+    .items-table th, .items-table td {
+        border: 1px solid #000;
+        padding: 6px;
+        text-align: left;
+        font-size: 14px;
+    }
+    
+    .weight-details {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 8px;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    
+    .amount-section {
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    
+    .validity-period {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 150px;
+        font-size: 14px;
+    }
+    
+    .photo-box {
+        width: 90px;
+        height: 150px;
+        border: 1px solid #000;
+        margin-left: 15px;
+    }
+
+    .btn-print {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #2575fc;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+</style>
+
+<!-- <style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
             margin: 1cm;
         }
     }
@@ -20,6 +170,7 @@
         background-color: #fff;
         font-family: Arial, sans-serif;
         border: 2px solid #000;
+		border-radius: 15px;
     }
     
     .header-container {
@@ -163,19 +314,22 @@
         transform: translateY(0);
         box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
     }
-</style>
+	.bilingual-label {
+        font-weight: bold;
+    }
+</style> -->
 
 <div class="pawn-ticket">
     <div class="header-container">
         <div class="deity-image">
-            <img src="https://saibabaimages.com/wp-content/uploads/2023/02/saibaba-2.png" alt="" srcset="" width="80px">
+            <img src="https://play-lh.googleusercontent.com/jOXq-hIdf60UE0TDt3ZKBV9GziyhLvGd7LAMZ0GlHOKC_bEmLzYDsI4GaMc4gwcOpX8" alt="" srcset="" width="90px">
         </div>
         <div class="company-details">
             <div class="company-name">{{ user_profile.business_title }}</div>
-            <div class="company-subheading">PAWN BROKER</div>
+            <div class="company-subheading">PAWN BROKER / அடகு பிரோக்கர்</div>
             <div class="company-address">
                 {{ user_profile.business_address }}<br>
-                {% if user_profile.business_phone %}Phone: {{ user_profile.business_phone }}{% endif %}
+                {% if user_profile.business_phone %}Phone / தொலைபேசி: {{ user_profile.business_phone }}{% endif %}
             </div>
         </div>
         <div class="deity-image">
@@ -184,24 +338,24 @@
     </div>
 
     <div class="form-details">
-        <div>P.B.L. No: {{ pbl_number|default:"" }}</div>
-        <div>Form F (See 7-B Rule 8)</div>
-        <div>Pawn Ticket No: {{ invoice.invoice_number }}</div>
-        <div>Date: {{ invoice.invoice_date }}</div>
+        <div>P.B.L. No / உரிமம் எண்: {{ pbl_number|default:"" }}</div>
+        <div>Form F (See 7-B Rule 8) / படிவம் எஃப்</div>
+        <div>Pawn Ticket No / அடகு சீட்டு எண்: {{ invoice.invoice_number }}</div>
+        <div>Date / தேதி: {{ invoice.invoice_date }}</div>
     </div>
 
     <div class="customer-details">
-        <label>Name & Address of Pawner:</label>
+        <label class="bilingual-label">Name & Address of Pawner / அடகு வைப்பவரின் பெயர் & முகவரி:</label>
         <div>{{ invoice_data.customer_name }}<br>{{ invoice_data.customer_address }}</div>
-        <label>Phone:</label>
+        <label class="bilingual-label">Phone / தொலைபேசி:</label>
         <div>{{ invoice_data.customer_phone }}</div>
     </div>
 
     <table class="items-table">
         <thead>
             <tr>
-                <th>Detailed Description of Articles</th>
-                <th>Nos.</th>
+                <th>Detailed Description of Articles / பொருட்களின் விவரம்</th>
+                <th>Nos. / எண்.</th>
             </tr>
         </thead>
         <tbody>
@@ -215,36 +369,37 @@
     </table>
 
     <div class="photo" style="display: flex; flex-direction: row; justify-content: space-between;">
-		<div class="weight-details">
-			<label>Gross Weight:</label>
-			<div>{{ invoice_data.gross_weight|default:"0.000" }}</div>
-			<label>Deduction:</label>
-			<div>{{ invoice_data.deduction|default:"0.000" }}</div>
-			<label>Net Weight:</label>
-			<div>{{ invoice_data.net_weight|default:"0.000" }}</div>
-			<label>Valuation:</label>
-			<div>₹ {{ invoice_data.valuation|default:"0.00" }}</div>
-		</div>
-		<div class="photo-box">
-			<!-- Photo box as shown in the image -->
-		</div>
-	</div>
+        <div class="weight-details">
+            <label class="bilingual-label">Gross Weight / மொத்த எடை:</label>
+            <div>{{ invoice_data.gross_weight|default:"0.000" }}</div>
+            <label class="bilingual-label">Deduction / கழிவு:</label>
+            <div>{{ invoice_data.deduction|default:"0.000" }}</div>
+            <label class="bilingual-label">Net Weight / நிகர எடை:</label>
+            <div>{{ invoice_data.net_weight|default:"0.000" }}</div>
+            <label class="bilingual-label">Valuation / மதிப்பீடு:</label>
+            <div>₹ {{ invoice_data.valuation|default:"0.00" }}</div>
+        </div>
+        <div class="photo-box">
+            <!-- Photo box as shown in the image -->
+        </div>
+    </div>
+
     <div class="amount-section">
-        <div><strong>Loan Amount: ₹ {{ invoice_data.invoice_total_amt_with_gst|floatformat:2 }}</strong></div>
-        <div class="amount-words">{{ total_in_words }} only</div>
+        <div><strong>Loan Amount / கடன் தொகை: ₹ {{ invoice_data.invoice_total_amt_with_gst|floatformat:2 }}</strong></div>
+        <div class="amount-words">{{ total_in_words }} only / மட்டும்</div>
     </div>
 
     <div class="validity-period">
-        This Pawn Ticket VALID up to {{ invoice_data.validity_date|default:"12 months from issue date" }}
+        This Pawn Ticket VALID up to / இந்த அடகு சீட்டு செல்லுபடியாகும் காலம்: {{ invoice_data.validity_date|default:"12 months from issue date" }}
     </div>
 
     <div class="footer">
         <div>
-            Time: {{ invoice.created_at|default:"" }}<br>
-            For {{ user_profile.business_title }}
+            Time / நேரம்: {{ invoice.created_at|default:"" }}<br>
+            For / இடம்: {{ user_profile.business_title }}
         </div>
         
-        <div>Signature of Pawner</div>
+        <div>Signature of Pawner </div>
     </div>
 </div>
 
